@@ -70,7 +70,7 @@ class PrintVerb(VerbExtension):
 
     def stamp_to_string(self, stamp):
         dt = datetime.fromtimestamp(stamp.sec)
-        s = dt.strftime('%Y-%m-%d %H:%M:%S')
+        s = dt.strftime('%H:%M:%S')
         s += '.' + str(int(stamp.nanosec % 1000000000)).zfill(9)
         return f"{s}"
 
@@ -108,7 +108,10 @@ class PrintVerb(VerbExtension):
         dt = self.add_color(self.stamp_to_string(msg.stamp), color)
         name = self.add_color(msg.name, color)
         mmsg = self.add_color(msg.msg, color)
-        text = f"[{dt}] [{lvl}] [{name}]: {mmsg}"
+        if self.args_.no_color:
+            text = f"[{dt}] [{lvl}] [{name}]: {mmsg}"
+        else:
+            text = f"[{dt}] [{name}]: {mmsg}"
         if self.args_.function_detail:
             file = self.add_color(msg.file, self.BLUE_TEXT)
             line = self.add_color(msg.line, self.BLUE_TEXT)
